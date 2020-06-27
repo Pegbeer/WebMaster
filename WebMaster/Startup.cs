@@ -5,9 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using WebMaster.Models;
 
 namespace WebMaster
 {
@@ -24,7 +26,13 @@ namespace WebMaster
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSession(o => {
+                o.IdleTimeout = TimeSpan.FromSeconds(1800);
+            });
+            services.AddDbContext<WebMasterDBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Conexion")));
         }
+
+        
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,12 +53,12 @@ namespace WebMaster
             app.UseRouting();
 
             app.UseAuthorization();
-
+            app.UseSession();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=SignIn}/{id?}");
             });
         }
     }

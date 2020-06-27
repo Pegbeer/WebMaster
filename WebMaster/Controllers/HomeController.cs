@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RestSharp;
 using WebMaster.Models;
 
 namespace WebMaster.Controllers
@@ -18,11 +20,22 @@ namespace WebMaster.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
+      
+
+        public IActionResult SignIn()
         {
             return View();
         }
 
+        public IActionResult Index() 
+        {
+            return View();
+        }
+
+        public IActionResult GoToProductos()
+        {
+            return RedirectToAction("Index", "Productos");
+        }
         public IActionResult Privacy()
         {
             return View();
